@@ -6,7 +6,7 @@ import numpy as np
 
 
 def image_merge(one_foto, two_foto):
-  '''def tensor_to_image(tensor):
+  def tensor_to_image(tensor):
     tensor = tensor*255
     tensor = np.array(tensor, dtype=np.uint8)
     if np.ndim(tensor)>3:
@@ -73,4 +73,5 @@ def image_merge(one_foto, two_foto):
   hub_model = hub.load('https://tfhub.dev/google/magenta/arbitrary-image-stylization-v1-256/2')
   stylized_image = hub_model(tf.constant(content_image), tf.constant(style_image))[0]
   save_image(stylized_image, "image")
-  tensor_to_image(stylized_image)'''
+  tensor_to_image(stylized_image)
+  return "image.jpg"
