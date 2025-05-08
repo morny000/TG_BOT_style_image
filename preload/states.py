@@ -5,4 +5,4 @@ class Aktiv(StatesGroup):
     expectation_image_one = State()
     expectation_image_two = State()
     ready_image = State()
-    previous_message_id = State()
+    delete_id = State()

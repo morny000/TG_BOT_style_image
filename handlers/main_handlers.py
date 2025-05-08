@@ -22,17 +22,17 @@ async def command_start_handler(message: types.Message, state: FSMContext) -> No
                           "\n💞Мы заранее благодарим Вас за использование нашего бота!"
                           '\n\nДля начала работы, пожалуйста, нажмите кнопку!',
                          reply_markup=builder.as_markup())
-    await state.update_data(previous_message_id=sent_message.message_id)
+    await state.update_data(delete_id=sent_message.message_id)
 
 
 @router.callback_query(F.data == "merge_image")
 async def start_merge(callback: types.CallbackQuery, state: FSMContext, bot: Bot):
     data = await state.get_data()
-    previous_message_id = data.get("previous_message_id")
-    await bot.delete_message(chat_id=callback.message.chat.id, message_id=previous_message_id)
+    delete_id = data.get("delete_id")
+    await bot.delete_message(chat_id=callback.message.chat.id, message_id=delete_id)
 
     sent_message = await callback.message.answer("Отправьте фото объекта")
-    await state.update_data(previous_message_id=sent_message.message_id)
+    await state.update_data(delete_id=sent_message.message_id)
     await state.set_state(Aktiv.expectation_image_one)
     await callback.answer()
 
@@ -40,8 +40,8 @@ async def start_merge(callback: types.CallbackQuery, state: FSMContext, bot: Bot
 @router.message(Aktiv.expectation_image_one)
 async def get_image_one(message: types.Message, state: FSMContext, bot: Bot):
     data = await state.get_data()
-    previous_message_id = data.get("previous_message_id")
-    await bot.delete_message(chat_id=message.chat.id, message_id=previous_message_id)
+    delete_id = data.get("delete_id")
+    await bot.delete_message(chat_id=message.chat.id, message_id=delete_id)
 
     photo = message.photo[-1]
     file_info = await bot.get_file(photo.file_id)
@@ -50,15 +50,15 @@ async def get_image_one(message: types.Message, state: FSMContext, bot: Bot):
 
     await state.update_data(one_foto=image_path)
     sent_message = await message.answer("Отправьте фото стиля") #надо писать sent перед await
-    await state.update_data(previous_message_id=sent_message.message_id) #обновляет айди стейта
+    await state.update_data(delete_id=sent_message.message_id) #обновляет айди стейта
     await state.set_state(Aktiv.expectation_image_two)
 
 
 @router.message(Aktiv.expectation_image_two)
 async def get_image_two(message: types.Message, state: FSMContext, bot: Bot):
     data = await state.get_data()
-    previous_message_id = data.get("previous_message_id")
-    await bot.delete_message(chat_id=message.chat.id, message_id=previous_message_id)
+    delete_id = data.get("delete_id")
+    await bot.delete_message(chat_id=message.chat.id, message_id=delete_id)
 
     photo = message.photo[-1]
     file_info = await bot.get_file(photo.file_id)
